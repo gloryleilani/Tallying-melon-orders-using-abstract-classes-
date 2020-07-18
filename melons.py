@@ -1,5 +1,7 @@
-"""Classes for melon orders."""
 
+import random
+from datetime import datetime, time
+"""Classes for melon orders."""
 
 class AbstractMelonOrder:
     """An abstraact base class that other melon orders inherit from."""
@@ -14,16 +16,48 @@ class AbstractMelonOrder:
         self.shipped = False
         
 
+    def get_base_price(self):
+        """Determine the base price for melons."""
+
+        #Gets current time stamp to determine if rush hour pricing applies
+        #timestamp = datetime.now() 
+        #Sample result is "datetime.datetime(2020, 7, 17, 23, 42, 3, 970250)
+
+        timestamp = datetime.now()
+        print("Order timestamp:", timestamp)  
+        
+        #class datetime.time(hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)
+        #datetime.weekday() returns the day of the week as an integer, where Monday is 0 and Sunday is 6. 
+
+        start = 8 
+        end = 11
+        
+        
+
+        if (start < timestamp.hour < end) and datetime.weekday(timestamp)<6:
+            base_price = 4 + random.randint(5,9) #Handle splurge pricing
+        
+        else:
+            base_price = random.randint(5,9) #Handle splurge pricing
+
+        #Prints the timestamp after it's converted to local time.  
+        #print("Order timestamp:", datetime.fromtimestamp(timestamp))
+
+
+        return base_price
+
+
     def get_total(self):
         """Calculate price, including tax."""
 
+        base_price = self.get_base_price()
+
         if self.species == "Christmas melon":
-            base_price = 1.5*5         
+            base_price = 1.5*base_price         
 
         else:
-            base_price = 5
         
-        total = (1 + self.tax) * self.qty * base_price
+            total = (1 + self.tax) * self.qty * base_price
 
         if order_type == "international" and self.qty < 10:
         
